@@ -1,0 +1,59 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}"
+	name="${project.name}" plugins-version="2">
+	<plugin-info>
+		<description>${project.description}</description>
+		<version>${project.version}</version>
+		<vendor name="${project.organization.name}" url="${project.organization.url}" />
+	</plugin-info>
+
+	<resource type="i18n" name="i18n"
+		location="com.intenso.jira.plugins.condval.conditions-validator" />
+
+	<issue-tabpanel key="conditionsValidator-issueTabPanel"
+		name="IssueTabPanel:Conditions Validator"
+		class="com.intenso.jira.plugins.condval.issuetabpanel.ConditionsValidatorIssueTabPanel">
+		<description key="conditions-validator.description" />
+		<label key="conditions-validator.label" />
+		<resource type="velocity" name="view"
+			location="templates/com/intenso/jira/plugins/condval/issuetabpanel/conditionsValidator-IssueTabPanel.vm" />
+	</issue-tabpanel>
+
+
+	<component key="conditionsValidator-component" name="Component:Conditions Validator"
+		class="com.intenso.jira.plugins.condval.component.ConditionsValidatorAllowedGroupsImpl">
+		<interface>com.intenso.jira.plugins.condval.component.ConditionsValidatorAllowedGroups
+		</interface>
+	</component>
+
+	<component-import key="PermissionManager"
+		name="ComponentImport:PermissionManager">
+		<interface>com.atlassian.jira.security.PermissionManager</interface>
+	</component-import>
+
+	<web-section key="conditionsValidator-webSection" name="WebSection:Conditions Validator"
+		location="admin_plugins_menu" system="true" weight="1000">
+		<label key="Conditions Validator" />
+		<condition class="com.atlassian.jira.plugin.webfragment.conditions.UserIsSysAdminCondition" />
+	</web-section>
+
+	<web-item key="conditionsValidator-webItem" name="WebItem:Conditions Validator"
+		section="admin_plugins_menu/conditionsValidator-webSection" system="true" weight="10">
+		<label key="Configuration" />
+		<link linkId="conditionsValidator-webItem-link">/secure/admin/ConditionsValidatorConfiguration.jspa
+		</link>
+	</web-item>
+
+	<webwork1 key="conditionsValidator-webwork1" name="WebWork1:Conditions Validator"
+		class="java.lang.Object">
+		<actions>
+			<action name="com.intenso.jira.plugins.condval.action.Configuration"
+				alias="ConditionsValidatorConfiguration" roles-required="admin">
+				<view name="success">/templates/com/intenso/jira/plugins/condval/action/configuration.vm
+				</view>
+				<view name="input">/templates/com/intenso/jira/plugins/condval/action/configuration.vm
+				</view>
+			</action>
+		</actions>
+	</webwork1>
+
+</atlassian-plugin>

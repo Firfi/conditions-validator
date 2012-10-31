@@ -1,0 +1,105 @@
+<style type="text/css">
+   .top-tick
+   {
+   		border-bottom: 1px solid #5F78B5;
+   		height: 1px;
+   		width: 12px;
+   }
+   .bottom-tick
+   {
+   		border-top: 1px solid #5F78B5;
+   		height: 1px;
+   		width: 12px;
+   }
+   .operator
+   {
+   		color:#5F78B5;
+   		margin:3px 0px;
+   }
+   .leaf
+   {
+   		margin:0px 17px; 
+   		background: none repeat scroll 0 0 #F5F4F4;
+   		padding:5px;
+   }
+   .condition-group
+   {
+   		border-left:thin solid #5F78B5;
+   }
+</style>
+<table>
+	<tr>
+		<td>
+			<p style="text-decoration:underline;
+					  color:#if( $actionAvailable )green #else red #end">
+					  $actionDescriptor
+			</p>
+			#set($currentIndentLevel = 1)
+			#set($openDivs = 0)	
+			#if($resultList.size() != 0)
+				#if($resultList.get(0).getIsOnlyOneCondition() == false)
+					#foreach ($divLevel in [$currentIndentLevel..$resultList.get(0).getIndentLevel()])
+						#set($currentIndentValue = $divLevel*20)
+						<div style="margin-left: ${currentIndentValue}px; ">
+						<div class="top-tick"><!-- --></div>
+						<div class="condition-group">
+						#set($openDivs = $divLevel)	
+						#set($currentIndentLevel = $resultList.get(0).getIndentLevel())
+					#end
+				#end
+				#foreach ($result in $resultList)
+					#if(($result.getIndentLevel() > $currentIndentLevel))
+					#set($decreasedCurrentIndentLevel = $currentIndentLevel + 1)	
+						#foreach ($divLevel in [$decreasedCurrentIndentLevel..$result.getIndentLevel()])
+							#set($currentIndentValue = $divLevel*20)
+							<div style="margin-left: ${currentIndentValue}px;">
+							<div class="top-tick"><!-- --></div>
+							<div class="condition-group">
+							#set($openDivs = $divLevel)	
+						#end
+						#set($currentIndentLevel = $result.getIndentLevel())
+						#set($addedAdditionalDivs = true)
+					#elseif($result.getIndentLevel() < $currentIndentLevel)
+						#set($drecreasedIndentLevel = $currentIndentLevel - 1)
+						#foreach ($divLevel in [$result.getIndentLevel()..$drecreasedIndentLevel])
+							</div>
+							<div class="bottom-tick"><!-- --></div>	
+							</div>
+						#end
+						#set($currentIndentLevel = $result.getIndentLevel())
+						#set($openDivs = $result.getIndentLevel())
+					#end
+					#if($result.resultType.name() == "STATUS_DESCRIPTION_AND_CONDITION_PASS")
+						<div class="leaf">
+							<span>$result.description</span>
+							<span> 
+							#if($result.conditionPass)
+								&nbsp; &nbsp; <span style="color:green">$i18n.getText('conditions-validator.validation.passed')</span>
+							#else
+								#if($result.errorMessage && $result.errorMessage != "")
+									&nbsp; &nbsp; <span style="color:red" title="$i18n.getText('conditions-validator.validation.error'):          $result.errorMessage">$i18n.getText('conditions-validator.validation.not.passed')</span>
+								#else
+									&nbsp; &nbsp; <span style="color:red">$i18n.getText('conditions-validator.validation.not.passed')</span>
+								#end
+							#end
+							</span>
+						</div>
+					#else
+						<p class="operator">-$result.operator</p>
+					#end
+				#end
+				#if($openDivs != 0)
+					#foreach ($divLevel in [1..$openDivs])
+						</div>	
+						<div class="bottom-tick"><!-- --></div>
+						</div>
+					#end
+				#end
+				#else
+					<div class="leaf">
+						<span>$i18n.getText('conditions-validator.validation.no.conditions')</span>
+					</div>
+			#end 
+		</td>
+	</tr>
+</table>

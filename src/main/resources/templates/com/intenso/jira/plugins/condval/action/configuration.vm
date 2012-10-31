@@ -1,0 +1,94 @@
+<html>
+<head>
+	<title>$i18n.getText('conditions-validator.configuration.browser.label')</title>
+</head>
+<body>
+	<script type="text/javascript">
+		function executeSubmit(form){
+			document.forms[form].submit();
+		}
+	</script>
+	
+		<div style="background: #FFFFFF">
+			<table class="jiraform maxWidth">
+				<tr>
+					<td class="jiraformheader">
+						<h3 class="formtitle">$i18n.getText('conditions-validator.configuration.allowed.groups.label')</h3>
+					</td>
+				</tr>
+				<tr>
+					<td class="jiraformbody">
+						$i18n.getText('conditions-validator.configuration.allowed.groups.description').
+					</td>
+				</tr>   
+			</table>  
+		</div>      
+<br/>
+	
+	<table align="center" bgcolor="#bbbbbb" border="0" cellpadding="0" cellspacing="0" width=90%>
+		<tr>
+			<td>
+				<table border="0" cellpadding="3" cellspacing="1" width=100%>
+					<tr bgcolor="#f0f0f0">
+						<td class="colHeaderLink"><b>$i18n.getText('conditions-validator.configuration.allowed.groups.table.label')</b></td>
+						<td class="colHeaderLink"></td>
+					</tr>
+
+					#foreach($group in $groups)
+
+						#if($velocityCount % 2 == 0)
+							<tr bgcolor="#fffff0">
+						#else
+							<tr bgcolor="#ffffff">
+						#end
+								<td valign="top">$group</td>
+								<td valign=top nowrap>
+								
+								<a href="javascript:executeSubmit('removeGroup_'+$velocityCount)">$i18n.getText('conditions-validator.configuration.allowed.groups.table.remove.group')</a>
+								
+								<form style="display:none;" action="ConditionsValidatorConfiguration!removeGroup.jspa" id="removeGroup_$velocityCount" method="POST">
+									<input type="text" name="group" value="$group" />
+								</form>
+								
+								</td>
+							</tr>
+					#end
+				</table>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	
+	<form action="ConditionsValidatorConfiguration!addGroup.jspa" method="POST" name="jiraform" onsubmit="if (this.submitted) return false; this.submitted = true; return true">
+	<table class="jiraform maxWidth">
+		<tbody>
+			<tr>
+				<td colspan="2" class="jiraformheader">
+					<h3 class="formtitle">$i18n.getText('conditions-validator.configuration.group.addon.label')</h3></td>
+			</tr>
+			<tr>
+				<td colspan="2" class="jiraformheader">
+        			$i18n.getText('conditions-validator.configuration.group.addon.description')
+        		</td>
+			</tr>
+			<tr>
+				<td class="fieldLabelArea">
+				
+				<i><span>$i18n.getText('conditions-validator.configuration.group.addon.group.name')<sup>*</sup></span></i>:
+				</td>
+				<td bgcolor="#ffffff" class="fieldValueArea">
+					<input type="text" name="group" size="60">
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" class="fullyCentered jiraformfooter">
+					<input type="submit" name="$i18n.getText('common.forms.add')" value="$i18n.getText('common.forms.add')" id="$i18n.getText('common.forms.add')" accesskey="S" title="Press Alt+S to submit form" class="spaced ">
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	</form>
+	
+</body>
+</html>
